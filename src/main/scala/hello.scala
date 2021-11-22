@@ -12,15 +12,15 @@ object Hello {
      // .setMaster("spark://spark:7077")
       // .setJars(Seq("/Users/m/code/spark-seaweedfs/lib/seaweedfs-hadoop2-client-1.6.9.jar"))
      .set("spark.hadoop.fs.seaweedfs.impl", "seaweed.hdfs.SeaweedFileSystem")
-     // .set("fs.s3a.impl", "seaweed.hdfs.SeaweedFileSystem")
-     .set("spark.hadoop.fs.defaultFS", "seaweedfs://seaweedfs:8888")
+     // .set("spark.hadoop.fs.seaweedfs.impl", "seaweed.hdfs.SeaweedFileSystem")
+     .set("spark.hadoop.fs.defaultFS", "s3a://seaweedfs:8888")
     // .set("spark.dynamicAllocation.enabled", "false")
     // val sc = new SparkContext(sparkConf)
     // val hadoopConfig = sc.hadoopConfiguration
     // hadoopConfig.set("fs.file.impl", classOf[org.apache.hadoop.fs.LocalFileSystem].getName)
     val spark = SparkSession.builder.config(sparkConf).getOrCreate()
     // val hadoopConfig = spark.SparkContext.hadoopConfiguration
-    val df = spark.read.format("binaryFile").option("pathGlobFilter", "*.txt").load("seaweedfs://seaweedfs:8888/test-data/")
+    val df = spark.read.format("binaryFile").option("pathGlobFilter", "*.txt").load("s3a://seaweedfs:8888/test-data/")
     df.select(functions.sum(functions.length(col("content")))).foreach(tb => println(s"total bytes $tb"))
   }
 }
